@@ -8,10 +8,27 @@ namespace ConsoleEmulator
 {
     internal class ConsoleCommandParser(FileSystemService fileSystemService)
     {
-        private readonly FileSystemService _fileSystemService = fileSystemService;
-
         public void ParseCommand(string command)
         {
+            var commandParts = command.Split(' ');
+
+            switch (commandParts[0])
+            {
+                case "ls":
+                    switch (commandParts.Length)
+                    {
+                        case 1:
+                            fileSystemService.ListDirectoryContents();
+                            break;
+                        case > 1:
+                            fileSystemService.ListDirectoryContents(commandParts[1]);
+                            break;
+                    }
+                    break;
+                default:
+                    Console.WriteLine("Command not recognized");
+                    break;
+            }
         }
     }
 }

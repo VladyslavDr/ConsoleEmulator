@@ -4,16 +4,18 @@
     {
         static void Main(string[] args)
         {
-            if (args.Length < 1)
-            {
-                Console.WriteLine("Usage: ConsoleEmulator <command>");
-                return;
-            }
+            //if (args.Length < 1)
+            //{
+            //    Console.WriteLine("Usage: ConsoleEmulator <command>");
+            //    return;
+            //}
 
             FileSystemService fileSystemService = new();
             ConsoleCommandParser commandParser = new(fileSystemService);
 
-            var input = string.Join(" ", args);
+            //var input = string.Join(" ", args);
+            var input = @"ls D:\\Leetcode";
+
             commandParser.ParseCommand(input);
         }
     }
