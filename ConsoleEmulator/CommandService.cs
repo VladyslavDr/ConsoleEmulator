@@ -6,10 +6,16 @@ using System.Threading.Tasks;
 
 namespace ConsoleEmulator
 {
-    internal class ConsoleCommandParser(FileSystemService fileSystemService)
+    internal class CommandService(FileSystemService fileSystemService) : ICommandService
     {
-        public void ParseCommand(string command)
+        public void ExecuteCommand(string? command)
         {
+            if (string.IsNullOrEmpty(command))
+            {
+                Console.WriteLine("Command not recognized");
+                return;
+            }
+
             var commandParts = command.Split(' ');
 
             switch (commandParts[0])
@@ -25,6 +31,10 @@ namespace ConsoleEmulator
                             break;
                     }
                     break;
+                case "cd":
+                    fileSystemService.ChangeDirectory(commandParts[1]);
+                    break;
+
                 default:
                     Console.WriteLine("Command not recognized");
                     break;

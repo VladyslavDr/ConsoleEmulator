@@ -1,22 +1,22 @@
 ﻿namespace ConsoleEmulator
 {
-    internal class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            //if (args.Length < 1)
-            //{
-            //    Console.WriteLine("Usage: ConsoleEmulator <command>");
-            //    return;
-            //}
-
             FileSystemService fileSystemService = new();
-            ConsoleCommandParser commandParser = new(fileSystemService);
+            ICommandService commandService = new CommandService(fileSystemService);
 
-            //var input = string.Join(" ", args);
-            var input = @"ls D:\\Leetcode";
+            Directory.SetCurrentDirectory(CurrentDirectory.Path);
 
-            commandParser.ParseCommand(input);
+            while (true)
+            {
+                Console.Write($"{CurrentDirectory.Path}> ");
+
+                var command = Console.ReadLine();
+
+                commandService.ExecuteCommand(command);
+            }
         }
     }
 }

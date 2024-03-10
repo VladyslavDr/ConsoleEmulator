@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,9 +16,6 @@ namespace ConsoleEmulator
             var directories = Directory.GetDirectories(currentDirectory);
             var files = Directory.GetFiles(currentDirectory);
 
-            Console.WriteLine($"Current directory: {currentDirectory}");
-            Console.WriteLine();
-
             Console.WriteLine("Directories:");
             foreach (var directory in directories)
             {
@@ -32,7 +30,6 @@ namespace ConsoleEmulator
                 Console.WriteLine(Path.GetFileName(file));
             }
         }
-
         public void ListDirectoryContents(string path)
         {
             if (!Directory.Exists(path))
@@ -61,8 +58,45 @@ namespace ConsoleEmulator
                 Console.WriteLine(Path.GetFileName(file));
             }
         }
-        public void ChangeDirectory(string directoryName)
+        public void ChangeDirectory(string path)
         {
+            if (Directory.Exists(path))
+            {
+                if (path == "..")
+                {
+                    var currentDirectory = Directory.GetCurrentDirectory();
+                    var parentDirectory = Directory.GetParent(currentDirectory)?.FullName;
+
+                    if (parentDirectory != null)
+                    {
+                        Directory.SetCurrentDirectory(parentDirectory);
+                        CurrentDirectory.Path = parentDirectory;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Already in the root directory.");
+                    }
+                }
+                else
+                {
+                    Directory.SetCurrentDirectory(path);
+                    var currentDirectory = Directory.GetCurrentDirectory();
+
+                    CurrentDirectory.Path = currentDirectory;
+                }
+            }
+            else if (File.Exists(path))
+            {
+                using (Process process = new())
+                {
+                    process.StartInfo = new ProcessStartInfo(path) { UseShellExecute = true };
+                    process.Start();
+                }
+            }   
+            else
+            {
+                Console.WriteLine("No such file or directory");
+            }
         }
 
         public void CreateDirectory(string directoryName)
